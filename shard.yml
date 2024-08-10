@@ -1,0 +1,17 @@
+name: dimeai
+version: 0.1.0
+
+authors:
+  - Alexander Kutsan <alexkutsan@gmail.com>
+
+targets:
+  dimeai:
+    main: src/main.cr
+
+dependencies:
+  openai:
+    github: lancecarlson/openai.cr
+    
+crystal: '>= 1.11.2'
+
+license: MIT
