@@ -1,0 +1,36 @@
+name: Crystal CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  nix-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v27
+      with:
+        nix_path: nixpkgs=channel:nixos-24.05
+    - run: nix-build
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dimeai
+        path: results/bin/dimeai
+
+  crystal-static-build:
+    runs-on: ubuntu-latest
+    container:
+      image: crystallang/crystal
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build app
+      run: shards build --static
+    - name: Run tests
+      run: crystal spec
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dimeai_static
+        path: ./bin/dimeai
