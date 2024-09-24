@@ -1,7 +1,3 @@
-Here's a revised version of the README with improved style and grammar:
-
----
-
 # DimeAI
 
 "Dime AI" is like a "Tell me, AI", translated from Spanish.
