@@ -23,7 +23,7 @@ jobs:
   crystal-static-build:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal
+      image: crystallang/1.13.3-alpine
     steps:
     - uses: actions/checkout@v4
     - name: Build app
