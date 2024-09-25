@@ -23,7 +23,7 @@ jobs:
   crystal-static-build:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal
+      image: crystallang/crystal:1.13.3-alpine
     steps:
     - uses: actions/checkout@v4
     - name: Build app
@@ -39,43 +39,39 @@ jobs:
   debian_package_build:
     runs-on: ubuntu-latest
     container:
-      image: crystallang/crystal:latest
+      image: crystallang/crystal:1.13.3-alpine
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          apk update
+          apk add dpkg dpkg-dev build-base
+      - name: Build app
+        run: shards build --static
+      - name: Run tests
+        run: crystal spec
+      - name: Build deb package
+        run: |
+          mkdir -p debbuild/dimeai_package/DEBIAN
+          cat <<EOF > debbuild/dimeai_package/DEBIAN/control
+          Package: dimeai
+          Version: 0.0.1
+          Section: utils
+          Priority: optional
+          Architecture: amd64
+          Essential: no
+          Maintainer: Alexander Kutsan <alexkutsan@gmail.com>
+          Description: DimeAI is a command-line interface (CLI) tool for interacting with LLM models. It allows users to send prompts and receive responses directly from the terminal.
+          EOF
 
-    - name: Install dpkg-dev
-      run: |
-        apt-get update
-        apt-get install -y dpkg-dev build-essential
-
-    - name: Build app
-      run: shards build --static
-
-    - name: Run tests
-      run: crystal spec
-
-    - name: Build deb package
-      run: |
-        mkdir -p debbuild/dimeai_package/DEBIAN
-        cat <<EOF > debbuild/dimeai_package/DEBIAN/control
-        Package: dimeai
-        Version: 0.0.1
-        Section: utils
-        Priority: optional
-        Architecture: amd64
-        Essential: no
-        Maintainer: Alexander Kutsan <alexkutsan@gmail.co>
-        Description: imeAI is a command-line interface (CLI) tool for interacting with LLM models. It allows users to send prompts and receive responses directly from the terminal.
-        EOF
-
-        mkdir -p debbuild/dimeai_package/usr/bin
-        cp ./bin/dimeai debbuild/dimeai_package/usr/bin/
-        chmod 755 debbuild/dimeai_package/usr/bin/dimeai
-
-        dpkg-deb --build debbuild/dimeai_package
-        mv debbuild/dimeai_package.deb dimeai_0.0.1_amd64.deb
-
-    - uses: actions/upload-artifact@v4
-      with:
-        name: dimeai_deb
-        path: dimeai_0.0.1_amd64.deb
+          mkdir -p debbuild/dimeai_package/usr/bin
+          cp ./bin/dimeai debbuild/dimeai_package/usr/bin/
+          chmod 755 debbuild/dimeai_package/usr/bin/dimeai
+  
+          dpkg-deb --build debbuild/dimeai_package
+          mv debbuild/dimeai_package.deb dimeai_0.0.1_amd64.deb
+  
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dimeai_deb
+          path: dimeai_0.0.1_amd64.deb
