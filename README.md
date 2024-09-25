@@ -25,7 +25,7 @@ This one I feel fomfortable for me, may be will be useful for someone else.
 While the current feature set meets my needs, I plan to add the following in the future if inspiration or necessity arises:
 - [ ] Create a Nix package and publish it in the Nix Store
 - [ ] Create a Homebrew package and publish it as a Cask
-- [ ] Create a Debian package
+- [*] Create a Debian package
 - [ ] Store API key in the system keyring
 - [ ] Support interactive conversations
 - [ ] Save conversation history locally
