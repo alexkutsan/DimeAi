@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: |
           apk update
-          apk add dpkg-dev build-base
+          apk add dpkg dpkg-dev build-base
       - name: Build app
         run: shards build --static
       - name: Run tests
