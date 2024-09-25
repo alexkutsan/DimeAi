@@ -37,16 +37,16 @@ jobs:
 
 
   debian_package_build:
-    runs-on: ubuntu-latest
-    container:
-      image: crystallang/crystal:latest
-    steps:
+  runs-on: ubuntu-latest
+  container:
+    image: crystallang/crystal:1.13.3-alpine
+  steps:
     - uses: actions/checkout@v4
 
-    - name: Install dpkg-dev
+    - name: Install dependencies
       run: |
-        apt-get update
-        apt-get install -y dpkg-dev build-essential
+        apk update
+        apk add dpkg-dev build-base
 
     - name: Build app
       run: shards build --static
@@ -64,8 +64,8 @@ jobs:
         Priority: optional
         Architecture: amd64
         Essential: no
-        Maintainer: Alexander Kutsan <alexkutsan@gmail.co>
-        Description: imeAI is a command-line interface (CLI) tool for interacting with LLM models. It allows users to send prompts and receive responses directly from the terminal.
+        Maintainer: Alexander Kutsan <alexkutsan@gmail.com>
+        Description: DimeAI is a command-line interface (CLI) tool for interacting with LLM models. It allows users to send prompts and receive responses directly from the terminal.
         EOF
 
         mkdir -p debbuild/dimeai_package/usr/bin
